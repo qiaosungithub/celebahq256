@@ -8,6 +8,7 @@ import argparse
 import torch
 import lmdb
 import os
+import numpy as np
 
 from tfrecord.torch.dataset import TFRecordDataset
 
@@ -49,7 +50,8 @@ def main(dataset, split, tfr_path, lmdb_path):
 
             # put the data in lmdb
             for data in loader:
-                im = data['data'][0].cpu().numpy()
+                # im = data['data'][0].cpu().numpy()
+                im = np.frombuffer(data['data'][0], dtype=np.uint8) # sqa modified
                 txn.put(str(count).encode(), im)
                 count += 1
                 if count % 100 == 0:
